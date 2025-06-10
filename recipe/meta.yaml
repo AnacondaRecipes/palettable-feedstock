@@ -28,11 +28,14 @@ test:
     - test
   imports:
     - palettable
+    - palettable.cartocolors
     - palettable.cmocean
     - palettable.colorbrewer
     - palettable.cubehelix
+    - palettable.lightbartlein
     - palettable.matplotlib
     - palettable.mycarta
+    - palettable.scientific
     - palettable.tableau
     - palettable.wesanderson
   commands:
