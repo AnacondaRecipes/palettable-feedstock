@@ -1,42 +1,63 @@
-{% set version = "3.3.0" %}
+{% set name = "palettable" %}
+{% set version = "3.3.3" %}
 
 package:
-  name: palettable
+  name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/p/palettable/palettable-{{ version }}.tar.gz
-  sha256: 72feca71cf7d79830cd6d9181b02edf227b867d503bec953cf9fa91bf44896bd
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 094dd7d9a5fc1cca4854773e5c1fc6a315b33bd5b3a8f47064928facaf0490a8
 
 build:
   number: 0
-  noarch: python
-  script: python -m pip install --no-deps --ignore-installed .
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: True  # [py<37]
 
 requirements:
-  build:
+  host:
     - python
     - pip
+    - wheel
+    - setuptools
   run:
     - python
-    - setuptools
 
 test:
+  source_files:
+    - test
   imports:
     - palettable
+    - palettable.cartocolors
     - palettable.cmocean
     - palettable.colorbrewer
     - palettable.cubehelix
+    - palettable.lightbartlein
     - palettable.matplotlib
     - palettable.mycarta
+    - palettable.scientific
     - palettable.tableau
     - palettable.wesanderson
+  commands:
+    - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    - pytest -v test
+  requires:
+    - pip
+    - pytest
 
 about:
-  home: https://jiffyclub.github.io/palettable/
+  home: https://jiffyclub.github.io/palettable
+  summary: Color palettes for Python
   license: MIT
+  license_family: MIT
   license_file: license.txt
-  summary: 'Color palettes for Python.'
+  description: |
+    Palettable (formerly brewer2mpl) is a library of color palettes for Python. 
+    It's written in pure Python with no dependencies, but it can supply color maps for matplotlib. 
+    You can use Palettable to customize matplotlib plots or supply colors for a web application.
+  doc_url: https://jiffyclub.github.io/palettable
+  dev_url: https://github.com/jiffyclub/palettable
 
 extra:
   recipe-maintainers:
